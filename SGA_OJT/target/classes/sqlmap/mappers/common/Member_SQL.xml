@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sga.sol.vc.mapper.MemberMapper">
+	<!-- 전체 유저 불러오기 -->
+	<select id="selectAllMember" resultType="membervo">
+ 		select user_id,user_password,fail_count,allow_ip,lock_dtm,last_login_dtm,access_ip,dek,kek from member order by user_id;
+	</select>
+
+	<!-- 아이디 중복체크 -->
+	<select id="checkId" resultType="Int" parameterType="String">
+		select count(user_id) from member where user_id = #{user_id}
+	</select>
+	
+	<!-- 회원 등록 -->
+	<insert id="insertMember" parameterType="membervo">
+		insert into member(user_id,user_password,dek) values(#{user_id},#{user_password},#{dek});
+	</insert>
+	
+	<!-- 회원정보 수정 -->
+	<update id="updateMemberByAdmin" parameterType="membervo">
+		update member set user_ip = #{user_id}, user_password = #{user_password} where user_id = #{user_id}
+	</update>
+
+	<!-- 로그인 -->
+	<select id="loginChk" parameterType="membervo" resultType="int">
+		select count(user_id) from member where user_id = #{user_id} and user_password = #{user_password}
+	</select>
+
+	<!-- 실패 횟수 증가 -->
+	<update id="updateFailLogin" parameterType="membervo" >
+		update member set fail_count = coalesce(fail_count,0)+1 where user_id = #{user_id}
+	</update>
+	
+	<!-- 실패 횟수 0으로 만들기 -->
+	<update id="updateFailLoginTo0" parameterType="membervo" >
+		update member set fail_count = coalesce(fail_count,0)+1 where user_id = #{user_id}
+	</update>
+	
+	<!-- 실패 횟수 조회 -->
+	<select id="selectFailLogin"  parameterType="membervo" resultType="int">
+		select fail_count from member where user_id = #{user_id}
+	</select>
+	
+
+	<!-- 가장 최근 로그인 시간 업데이트 -->
+	<update id="updateLoginDtm" parameterType="membervo">
+		update member set last_login_dtm = current_timestamp where user_id = #{user_id} 
+	</update>
+	
+	<!-- 로그인 잠금 시간 업데이트 -->
+	<update id="updateLockDtm" parameterType="membervo">
+		update member set lock_dtm = current_timestamp where user_id = #{user_id} 
+	</update>
+	
+</mapper>
