@@ -21,7 +21,14 @@
     	selectAllMember();
     });
     
-    function selectAllMember() {
+
+    
+    function openInfo(e){
+
+    	window.open("userinfo?user_id="+e+"","member","width=640, height=400, left=1000, top=200")
+    }
+    
+    function selectAllMember(var user_id) {
     	var listurl = "getMemberList"
     	let list = [];
     	
@@ -38,17 +45,14 @@
     			var list = '';
     			$.each(memberList,function(i,item){
     				console.log("item" , item);
-    				list += '<tr class="text-gray-700 dark:text-gray-400"><td class="px-4 py-3">';
-    				list += '<div class="flex items-center text-sm"><div class=" inset-0 rounded-full shadow-inner"></div></div>';
-    				list += '<div><p class="font-semibold">' + item.user_id +'</p></div></td>';
+    				list += '<tr class="text-gray-700 dark:text-gray-400" onclick=openInfo("' + item.user_id + '")>'
+    				list += '<td class="px-4 py-3 text-sm">' + item.user_id + '</td>';
     				list += '<td class="px-4 py-3 text-sm">' + item.user_password + '</td>';
     				list += '<td class="px-4 py-3 text-sm">' + item.allow_ip + '</td>';
     				list += '<td class="px-4 py-3 text-sm">' + item.access_ip + '</td>';
     				list += '<td class="px-4 py-3 text-sm">' + item.lock_dtm + '</td>';
     				list += '<td class="px-4 py-3 text-sm">' + item.last_login_dtm + '</td>';
     				list += '<td class="px-4 py-3 text-sm">' + item.fail_count + '</td>';
-    				list += '<td class="px-4 py-3 text-sm">' + item.dek + '</td>';
-    				list += '<td class="px-4 py-3 text-sm">' + item.kek + '</td>';
     				list += '</tr>';
     				
     			})//each
@@ -199,16 +203,13 @@
                     		<tr
                       		class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
                     		>
-		                      <th class="px-4 py-3">User</th>
+		                      <th class="px-4 py-3" width="100px">User</th>
 		                      <th class="px-4 py-3">Password</th>
 		                      <th class="px-4 py-3">allow_ip</th>
 		                      <th class="px-4 py-3">access_ip</th>
 		                      <th class="px-4 py-3">lock_dtm</th>
 		                      <th class="px-4 py-3">last_login_dtm</th>
-		                      <th class="px-4 py-3">fail_count</th>
-		                      <th class="px-4 py-3">dek</th>
-		                      <th class="px-4 py-3">kek</th>
-                      
+		                      <th class="px-4 py-3">fail_count</th>            
 		                    </tr>
         	          </thead>
             	      <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800" id="memberList">

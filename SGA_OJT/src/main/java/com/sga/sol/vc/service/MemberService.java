@@ -1,9 +1,8 @@
 package com.sga.sol.vc.service;
 
-import java.util.HashMap;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Service;
 
 import com.sga.sol.vc.vo.MemberVo;
 
@@ -17,6 +16,9 @@ public interface MemberService {
 	
 	//사용자 등록
 	void insertMember(MemberVo vo) throws Exception;
+	
+	//유저 정보 조회(1명)
+	MemberVo selectOneUser(String user_id) throws Exception;
 	
 	//사용자 수정
 	void updateMemberByAdmin(MemberVo vo) throws Exception;
@@ -35,4 +37,11 @@ public interface MemberService {
 	
 	//로그인 잠금 시간 변경
 	void updateLockDtm(MemberVo vo) throws Exception;
+	
+	//사용자 등록2
+	void insertMember2(MemberVo vo) throws Exception;
+	
+	//로그인 확인
+	MemberVo loginChk2(MemberVo vo) throws Exception;
+	
 }

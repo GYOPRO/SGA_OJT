@@ -39,7 +39,7 @@ $(document).ready(function(){
 <div id="container">
     <div class="inner">
         <div class="form_content signup_wrap">
-            <h1>Sign Up</h1>
+            <h1>User registration</h1>
             <form action="insertMember" method="post">
                 <label>아이디</label>
                 <div class="check">
@@ -129,8 +129,10 @@ function checkPw1(pw){
 		$("#checkPw1").html("");
 		pwChecked1 = true;
 	}
+	setAble();
 }
-
+</script>
+<script>
 let pwChecked2 = false;
 
 //비밀번화 재확인
@@ -162,8 +164,8 @@ function checkPw2(pw){
 </script>
 <script>
 	function setAble(){
-		console.log("idChecked : " + idChecked + " pwChecked : " + pwChecked);
-		if(idChecked && pwChecked1 && pwCheck2){
+		console.log("idChecked : " + idChecked + " pwChecked : " + pwChecked1);
+		if(idChecked && pwChecked1 && pwChecked2){
 			//아이디와 비밀번호 둘다 유효성 검사를 마쳤다면
 			$("button[type=submit]").removeAttr("disabled");
 		}

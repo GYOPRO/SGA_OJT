@@ -1,13 +1,13 @@
 package com.sga.sol.vc.controller;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.security.Security;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.bouncycastle.util.encoders.Hex;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +19,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.sga.sol.vc.serviceimpl.MemberServiceImpl;
-import com.sga.sol.vc.util.SHA3_DRBG;
+import com.sga.sol.vc.service.MemberService;
+import com.sga.sol.vc.util.ECBPasswordUtil;
+import com.sga.sol.vc.util.HashPasswordUtil;
 import com.sga.sol.vc.vo.MemberVo;
-import com.sun.javafx.collections.MappingChange.Map;
-import com.sun.jmx.snmp.Timestamp;
 
 @Controller
 public class MemberController {
@@ -31,59 +30,71 @@ public class MemberController {
 	private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
 	
 	@Autowired
-	private MemberServiceImpl memberservice;
+	private MemberService memberservice;
 	//로그인 페이지 이동
 	@RequestMapping("/")
 	public String LoginPage() {
+		
 		return "member/login";
 	}
 	
+
+	
 	//로그인 정보 확인
-	@RequestMapping(value = "/loginChk", method = RequestMethod.POST)
-	@ResponseBody
-	public HashMap <String, String> loginChk(MemberVo vo) throws Exception{
-
-		
-		
-		
-		HashMap<String, String> result = new HashMap <String,String>();
-		
-		String Code ="";
-
-		
-			int loginRst = memberservice.loginChk(vo);
+		@RequestMapping(value = "/loginChk", method = RequestMethod.POST)
+		@ResponseBody
+		public HashMap <String, String> loginChk(MemberVo vo) throws Exception{
 			
-			if(loginRst > 0) { // 로그인 성공시
-				int failCount = memberservice.selectFailLogin(vo);
-				if(failCount < 5) {
-					Code = "1";
-					memberservice.updateLoginDtm(vo);//로그인 시간 업데이트
-				}else {
-					Code ="3";
-				}
-			}else { //로그인 실패시
+			//return 객체 생성
+			HashMap<String, String> result = new HashMap <String,String>();
+			
+			//BouncyCastleProvider 객체 생성
+	        Security.addProvider(new BouncyCastleProvider());
+			
+	        //seed 설정
+	        HashPasswordUtil passwordUtil = new HashPasswordUtil("random_seed");
+	        
+			String Code ="";
+			
+				//아이디 존재하는지
 				int idChk = memberservice.checkId(vo.getUser_id());
-				if(idChk == 0) {
-					Code = "0";
-				}else {
+				System.out.println("idCHk"+idChk);
+				//입력 패스워드
+				String inputPassword = vo.getUser_password(); 
+				//db저장 패스워드 정보 불러오기
+				MemberVo vvo = memberservice.loginChk2(vo);
+				
+				if(idChk == 0) {//아이디 존재하지 않을 때
+					Code ="0"; //"아이디 비밀번호 재확인"
+				}else { //아이디 존재할 때
+					//입력 패스워드 => 해시
+					String dek = passwordUtil.loginHash(inputPassword, vvo.getSalt());
+					//db저장 kek => 복호화
+					String decry = ECBPasswordUtil.bytesToHex(ECBPasswordUtil.decrypt(ECBPasswordUtil.hexToBytes(vvo.getKek()), ECBPasswordUtil.hexToBytes(vvo.getKey())));
+					System.out.println("Data is equal:" + dek.equals(decry));
 					int failCount = memberservice.selectFailLogin(vo);
-					if(failCount < 5) {
-						Code = "0";
-						memberservice.updateFailLogin(vo); // 실패 횟수 증가
-						int failCount2 = memberservice.selectFailLogin(vo);
-						if(failCount2 == 5) {
-							memberservice.updateLockDtm(vo);
+					if(failCount < 5) { //로그인 실패 횟수가 5보다 적을 때(로그인 가능할 때)
+						if(dek.equals(decry)) {
+							//입력받은 패스워드 + 저장된 salt 암호 = kek복화화 암호 일 때(같을 떄)
+							Code = "1"; 
+							memberservice.updateLoginDtm(vo);//최근 로그인 시간 없데이트
+						}else { //암호가 다를 때
+							Code = "0";
+							memberservice.updateFailLogin(vo); // 로그인 실패 횟수 증가
+							int failCount2 = memberservice.selectFailLogin(vo);
+							if(failCount2 == 5) { //로그인 실패 횟수가 가 5가 되면
+								memberservice.updateLockDtm(vo); // 로그인 잠금 시간 업데이트
+							}
 						}
-					}else { 
+					}else { //로그인 실패 횟수가 초과 되었을 때
 						Code ="3";
 					}
 				}
 				
-			}
-	
-		result.put("Code",Code);
-		return result;
-	}
+			System.out.println(Code);
+			result.put("Code",Code);
+			return result;
+		}
 	
 	//사용자 목록 페이지 이동
 	@RequestMapping("/list")
@@ -110,8 +121,6 @@ public class MemberController {
 		return "member/insert";
 	}
 	
-
-	
 	//아이디 중복 확인
 	@RequestMapping(value ="/checkId")
 	@ResponseBody
@@ -124,30 +133,55 @@ public class MemberController {
 	@PostMapping(value ="/insertMember")
 	public String insertMember(MemberVo vo, Model model, HttpServletRequest request) throws Exception{
 		
-		//암호확인
-		System.out.println("입력된 암호 : " + vo.getUser_password());
+		//BouncyCastleProvider 객체 생성
+        Security.addProvider(new BouncyCastleProvider());
 		
-		byte[] seed = vo.getUser_password().getBytes();
-		byte[] random = SHA3_DRBG.sha3_drbg(seed, 32);
-		String password = Hex.toHexString(random);
-		vo.setDek(password);
-		System.out.println("암호화 암호 : " + vo.getDek());
+        //seed 설정
+        HashPasswordUtil passwordUtil = new HashPasswordUtil("random_seed");
+        
+        byte[] saltb = passwordUtil.generateSalt();
+        String salt = ECBPasswordUtil.bytesToHex(saltb);
+        byte[] hash = passwordUtil.generateHash(vo.getUser_password(), salt);
+        byte[] key =  ECBPasswordUtil.getEcbKey(16); //시리얼번호 조합으로 변경해야함
+        String kek = ECBPasswordUtil.bytesToHex(ECBPasswordUtil.encrypt(hash, key));
+        
+        vo.setKek(kek);
+        vo.setKey(ECBPasswordUtil.bytesToHex(key));
+        vo.setDek(ECBPasswordUtil.bytesToHex(hash));
+        vo.setSalt(salt);
+        
 		
-		memberservice.insertMember(vo);
+		memberservice.insertMember2(vo);
 		return "redirect:/list";
 	}
 	
-	//사용자 정보 수정 페이지 이동
+	
+	//사용자 정보 수정 폼 이동
 	@RequestMapping("/updateMember")
-	public String updateMember() throws Exception{
+	public String updateMemberPage() throws Exception{
 		return "member/update";
 	}
 	
-	//사용자 정보 수정 페이지 이동test
-	@RequestMapping("/updateMembertest")
-	public String updateMembertest() throws Exception{
-		return "member/updatetest";
+	
+	//사용자 정보 수정 폼
+	@RequestMapping("/userinfo")
+	public String userinfo(String user_id) throws Exception{
+		return "member/userinfo";
 	}
+	
+	//사용자 수정 정보 불러오기
+	@RequestMapping(value = "/getMember", method = {RequestMethod.GET, RequestMethod.POST}, produces = {"application/json;charset=utf-8"})
+	public Object getMember(@RequestParam("user_id") String user_id) throws Exception{
+		
+		MemberVo vo = memberservice.selectOneUser(user_id);
+		
+		System.out.println(vo.getUser_id());
+		HashMap<String, Object> user = new HashMap<String, Object>();
+		user.put("user",vo);
+		System.out.println(user);
+		return user;
+	}
+	
 
 	//사용자 정보 수정
 	@RequestMapping("/updateMemberByAdmin")

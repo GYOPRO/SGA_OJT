@@ -4,7 +4,7 @@
 <mapper namespace="com.sga.sol.vc.mapper.MemberMapper">
 	<!-- 전체 유저 불러오기 -->
 	<select id="selectAllMember" resultType="membervo">
- 		select user_id,user_password,fail_count,allow_ip,lock_dtm,last_login_dtm,access_ip,dek,kek from member order by user_id;
+ 		select user_id,user_password,fail_count,allow_ip,lock_dtm,last_login_dtm,access_ip,dek,kek,salt,key from member order by user_id;
 	</select>
 
 	<!-- 아이디 중복체크 -->
@@ -14,8 +14,13 @@
 	
 	<!-- 회원 등록 -->
 	<insert id="insertMember" parameterType="membervo">
-		insert into member(user_id,user_password,dek) values(#{user_id},#{user_password},#{dek});
+		insert into member(user_id,user_password,dek,salt) values(#{user_id},#{user_password},#{dek},#{salt});
 	</insert>
+	
+	<!-- 유저 정보 조회(1명) -->
+	<select id="selectOneUser" parameterType="String" resultType="membervo">
+		select user_id,dek,salt,kek,key from member where user_id = #{user_id};
+	</select>
 	
 	<!-- 회원정보 수정 -->
 	<update id="updateMemberByAdmin" parameterType="membervo">
@@ -42,15 +47,24 @@
 		select fail_count from member where user_id = #{user_id}
 	</select>
 	
-
 	<!-- 가장 최근 로그인 시간 업데이트 -->
 	<update id="updateLoginDtm" parameterType="membervo">
-		update member set last_login_dtm = current_timestamp where user_id = #{user_id} 
+		update member set last_login_dtm = to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS') where user_id = #{user_id} 
 	</update>
 	
 	<!-- 로그인 잠금 시간 업데이트 -->
 	<update id="updateLockDtm" parameterType="membervo">
-		update member set lock_dtm = current_timestamp where user_id = #{user_id} 
+		update member set lock_dtm = to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS') where user_id = #{user_id} 
 	</update>
+	
+	<!-- 회원가입 salt, key, dek, 추가 -->
+	<insert id="insertMember2" parameterType="membervo">
+		insert into member(user_id,user_password,dek,salt,kek,key) values(#{user_id},#{user_password},#{dek},#{salt},#{kek},#{key});
+	</insert>
+	
+	<!-- 로그인 확인2 -->
+	<select id="loginChk2" parameterType="membervo" resultType="membervo">
+		select user_id,user_password,dek,salt,kek,key from member where user_id = #{user_id}
+	</select>
 	
 </mapper>

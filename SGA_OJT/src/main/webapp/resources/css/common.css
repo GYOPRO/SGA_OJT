@@ -124,13 +124,7 @@ table.detail tbody td{
 	background-color: #d7d7d7;
 	margin-right: 6px;
 }
-.pass{
-	padding : 10px;
-	margin: 10px;
-}
-span{
-	font-size: 1px;
-}
+
 .comment .profile span.id{
 	display: inline-block;
 	height: 20px;
@@ -245,6 +239,7 @@ form label{
 	margin: 0 auto 3px auto;
 	font-family: 'PreBold', sans-serif;
 	font-size: 15px;
+
 }
 .signup_wrap form input{
 	margin-bottom: 20px;
@@ -252,7 +247,12 @@ form label{
 .check {
 	width : 600px;
 	padding-top: 5px;
-	height: none;
+	height: 50px;
+}
+.checkpw{
+	height : 50px;
+	margin-bottom:10px;
+	margin-top:10px;
 }
 #idcheck{
 	margin : 10px;
@@ -266,7 +266,6 @@ form label{
 	height: none;
 }
 .checkpw{
-	background-color:red;
 	width : 500px;
 	display: inline-block;
 	
@@ -286,6 +285,7 @@ form label{
 }
 .select input[type=radio]+label{
     display: inline-block;
+   
     cursor: pointer;
     height: 30px;
     width: 120px;

@@ -17,6 +17,9 @@ public interface MemberMapper {
 	//사용자 등록
 	void insertMember(MemberVo vo) throws Exception;
 	
+	//사용자 정보 조회(1명)
+	MemberVo selectOneUser(String user_id) throws Exception;
+	
 	//사용자 수정
 	void updateMemberByAdmin(MemberVo vo) throws Exception;
 	
@@ -34,4 +37,10 @@ public interface MemberMapper {
 	
 	//로그인 잠금 시간 변경
 	void updateLockDtm(MemberVo vo) throws Exception;
+	
+	//사용자 등록2
+	void insertMember2(MemberVo vo) throws Exception;
+	
+	//로그인확인2 user_id,password,dek,salt,kek,key
+	MemberVo loginChk2(MemberVo vo) throws Exception;
 }

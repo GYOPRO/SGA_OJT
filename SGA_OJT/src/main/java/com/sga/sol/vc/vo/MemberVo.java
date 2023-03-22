@@ -6,6 +6,7 @@ public class MemberVo {
 	int fail_count;
 	String allow_ip,access_ip;
 	String dek,kek;
+	String salt, key;
 	
 	String lock_dtm,last_login_dtm;
 	public MemberVo() {}
@@ -17,6 +18,7 @@ public class MemberVo {
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
 	}
+
 	public String getUser_password() {
 		return user_password;
 	}
@@ -53,18 +55,39 @@ public class MemberVo {
 	public void setLast_login_dtm(String last_login_dtm) {
 		this.last_login_dtm = last_login_dtm;
 	}
+
 	public String getDek() {
 		return dek;
 	}
+
 	public void setDek(String dek) {
 		this.dek = dek;
 	}
+
 	public String getKek() {
 		return kek;
 	}
+
 	public void setKek(String kek) {
 		this.kek = kek;
 	}
-	
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+
 	
 }
