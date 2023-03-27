@@ -22,27 +22,35 @@ public class ECBPasswordUtil {
 	 * @throws 암호화 실패시
 	 */
 	public static byte[] encrypt(byte[] data, byte[] key) throws Exception {
-		
 		// 32바이트 데이터 블록 16바이트로 나누기
 		byte[] leftBlock = Arrays.copyOfRange(data, 0, BLOCK_SIZE);
 		byte[] rightBlock = Arrays.copyOfRange(data, BLOCK_SIZE, BLOCK_SIZE * 2);
 
-		// KISA소스코드 사용 암호화 => 16바이트 데이터 + 16바이트 키
-		byte[] pbCipher1 = KISA_SEED_ECB.SEED_ECB_Encrypt(key, leftBlock, 0, 16);
-		byte[] pbCipher2 = KISA_SEED_ECB.SEED_ECB_Encrypt(key, rightBlock, 0, 16);
+		// 키 ScretKeySpec 사용해서 암호 키 만들기
+		SecretKeySpec keySpec = new SecretKeySpec(key, 0, BLOCK_SIZE, "SEED");
 
-		
-		// 나눈 암호화 블록 결합 64바이트 배열
-		byte[] encryptedData = new byte[BLOCK_SIZE * 4];
-		System.arraycopy(pbCipher1, 0, encryptedData, 0, BLOCK_SIZE*2);
-		System.arraycopy(pbCipher2, 0, encryptedData, BLOCK_SIZE*2, BLOCK_SIZE*2);
-		
-		//64바이트 암호화 데이터 리턴
+		// SEED/ECB 알고리즘 생성
+		Cipher cipher = Cipher.getInstance("SEED/ECB/NoPadding");
+		// 암호화 , 키 초기화
+		cipher.init(Cipher.ENCRYPT_MODE, keySpec);
+
+		// 나눈 16바이트 블록 따로따로 암호화
+		byte[] encryptedLeft = cipher.doFinal(leftBlock);
+		byte[] encryptedRight = cipher.doFinal(rightBlock);
+		/*
+		System.out.println("암호화 1번:     "+bytesToHex(encryptedLeft));
+		System.out.println("암호화 2번:     "+bytesToHex(encryptedRight));
+		*/
+		// 나눈 암호화 블록 결합
+		byte[] encryptedData = new byte[BLOCK_SIZE * 2];
+		System.arraycopy(encryptedLeft, 0, encryptedData, 0, BLOCK_SIZE);
+		System.arraycopy(encryptedRight, 0, encryptedData, BLOCK_SIZE, BLOCK_SIZE);
+
 		return encryptedData;
 	}
 
 	/**
-	 * SEED 암호 알고리즘을 사용하여16바이트 키로 32바이트 데이터 블록을 복호화합니다.
+	 * SEED 암호 알고리즘을 사용하여 16바이트 키로 32바이트 데이터 블록을 복호화합니다.
 	 *
 	 * @param data 복호화할 32바이트 데이터 블록 - 암호화 된 데이터
 	 * @param key  16바이트 복호화 키 -
@@ -50,23 +58,33 @@ public class ECBPasswordUtil {
 	 * @throws Exception 복호화 실패 시
 	 */
 	public static byte[] decrypt(byte[] data, byte[] key) throws Exception {
+		// 32바이트 데이터 블록을 두 개의 16바이트 블록으로 분할합니다.
+		byte[] leftBlock = Arrays.copyOfRange(data, 0, BLOCK_SIZE);
+	    byte[] rightBlock = Arrays.copyOfRange(data, BLOCK_SIZE, BLOCK_SIZE * 2);
 
+		// 키 ScretKeySpec 사용해서 암호 키 만들기
+		SecretKeySpec keySpec = new SecretKeySpec(key, 0, BLOCK_SIZE, "SEED");
+
+		// SEED/ECB 알고리즘 생성
+		Cipher cipher = Cipher.getInstance("SEED/ECB/NoPadding");
+		// 복호화 , 키로 초기화
+		cipher.init(Cipher.DECRYPT_MODE, keySpec);
+
+		// 나눈 16바이트 블록 따로따로 복호화
+		byte[] decryptedLeft = cipher.doFinal(leftBlock);
+		byte[] decryptedRight = cipher.doFinal(rightBlock);
 		
-		// 64바이트 데이터 블록을 두 개의 32바이트 블록으로 분할합니다.
-		byte[] leftBlock = Arrays.copyOfRange(data, 0, BLOCK_SIZE*2);
-	    byte[] rightBlock = Arrays.copyOfRange(data, BLOCK_SIZE*2, BLOCK_SIZE * 4);
-	    
-	    //32바이트 암호화 배열 + 16바이트 키  복호화
-	    byte[] pbPlain1 = KISA_SEED_ECB.SEED_ECB_Decrypt(key,leftBlock, 0, 32);
-		byte[] pbPlain2 = KISA_SEED_ECB.SEED_ECB_Decrypt(key,rightBlock, 0, 32);
-	    
+		/*
+		System.out.println("복호화 1번:     "+bytesToHex(decryptedLeft));
+		System.out.println("복호화 2번:     "+bytesToHex(decryptedRight));
+		 */
 		
 		// 나눈 암호화 블록 결합
 		byte[] decryptedData = new byte[BLOCK_SIZE * 2];
-		System.arraycopy(pbPlain1, 0, decryptedData, 0, BLOCK_SIZE);
-		System.arraycopy(pbPlain2, 0, decryptedData, BLOCK_SIZE, BLOCK_SIZE);
-;
-		// 32바이트 배열 반환
+		System.arraycopy(decryptedLeft, 0, decryptedData, 0, BLOCK_SIZE);
+		System.arraycopy(decryptedRight, 0, decryptedData, BLOCK_SIZE, BLOCK_SIZE);
+
+		// 바이트 배열 반환
 		return decryptedData;
 	}
 	

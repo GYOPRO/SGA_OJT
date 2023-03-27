@@ -1,9 +1,6 @@
 package com.sga.sol.vc.mapper;
 
-import java.util.HashMap;
 import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
 
 import com.sga.sol.vc.vo.MemberVo;
 
@@ -12,16 +9,16 @@ public interface MemberMapper {
 	List<MemberVo> selectAllMember() throws Exception;
 	
 	//아이디 중복 확인
-	int checkId(String user_id) throws Exception;
+	int checkId(String userId) throws Exception;
 	
 	//사용자 등록
 	void insertMember(MemberVo vo) throws Exception;
 	
 	//사용자 정보 조회(1명)
-	MemberVo selectOneUser(String user_id) throws Exception;
+	MemberVo selectOneUser(String userId) throws Exception;
 	
 	//사용자 수정
-	void updateMemberByAdmin(MemberVo vo) throws Exception;
+	void updateMemberByAdmin(String userId) throws Exception;
 	
 	//로그인 확인(아이디, 비밀번호)
 	int loginChk(MemberVo vo) throws Exception;
@@ -41,6 +38,10 @@ public interface MemberMapper {
 	//사용자 등록2
 	void insertMember2(MemberVo vo) throws Exception;
 	
-	//로그인확인2 user_id,password,dek,salt,kek,key
+	//로그인확인2 userId,password,dek,salt,kek,key
 	MemberVo loginChk2(MemberVo vo) throws Exception;
+	
+	//사용자 삭제
+	void deleteUser(MemberVo vo) throws Exception;
+	
 }

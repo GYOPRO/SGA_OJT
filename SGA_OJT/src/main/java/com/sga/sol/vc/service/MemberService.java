@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.sga.sol.vc.util.ECBPasswordUtil;
+import com.sga.sol.vc.util.sha3;
 import com.sga.sol.vc.vo.MemberVo;
 
 public interface MemberService {
@@ -12,16 +14,16 @@ public interface MemberService {
 	List<MemberVo> selectAllMember() throws Exception;
 	
 	//아이디 중복 확인
-	int checkId(String user_id) throws Exception;
+	int checkId(String userId) throws Exception;
 	
 	//사용자 등록
 	void insertMember(MemberVo vo) throws Exception;
 	
 	//유저 정보 조회(1명)
-	MemberVo selectOneUser(String user_id) throws Exception;
+	MemberVo selectOneUser(String userId) throws Exception;
 	
 	//사용자 수정
-	void updateMemberByAdmin(MemberVo vo) throws Exception;
+	void updateMemberByAdmin(String userId) throws Exception;
 	
 	//로그인 확인(아이디, 비밀번호)
 	int loginChk(MemberVo vo) throws Exception;
@@ -43,5 +45,15 @@ public interface MemberService {
 	
 	//로그인 확인
 	MemberVo loginChk2(MemberVo vo) throws Exception;
+	
+	//회원등록 암호화
+	MemberVo encryptUser(MemberVo vo) throws Exception;
+	
+	//회원 로그인 확인
+	String loginUser(MemberVo vo) throws Exception;
+	
+	//사용자 삭제
+	void deleteUser(MemberVo vo) throws Exception;
+		
 	
 }

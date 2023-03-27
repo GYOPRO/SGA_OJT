@@ -8,8 +8,24 @@
 <script src="http://code.jquery.com/jquery-3.5.1.js"></script>
 <script>
 $(document).ready(function () {
-	$("#login_btn").on('click', function() {
-		loginChk();
+	
+	document.addEventListener("keydown", function(event) {
+		  if (event.keyCode === 13) {
+		   $("#loginBtn").click();
+		  }
+		});
+	
+	
+	$("#loginBtn").on('click', function() {
+		if($("#userId").val() == ""){
+			$("#loginChk").html("아이디를 입력해 주세요.");
+		}
+		else if($("#userPassword").val() == ""){
+			$("#loginChk").html("비밀번호를 입력해 주세요.");
+		}
+		else{
+			loginChk();
+		}
 	})
 });
 
@@ -18,16 +34,17 @@ function loginChk(){
 		url : "/sol/loginChk",
 		type : "POST",
 		data : {
-			user_id : $("#user_id").val(),
-			user_password : $("#user_password").val()
+			userId : $("#userId").val(),
+			userPassword : $("#userPassword").val()
 		},
 		success : function(data){
 			if(data.Code == 0){
-				alert("아이디 비밀번호 재확인");
+				$("#loginChk").html("아이디 또는 비밀번호를 잘못입력했습니다.<br>입력하신 내용을 다시 확인해주세요");
+				$("#loginChk").attr('color','red');
 			}else if(data.Code == 1){
 				location.href ="list";
 			}else if (data.Code == 3){
-				alert("로그인 시도 초과");
+				$("#loginChk").html("로그인 시도 초과");
 			}
 			console.log("통신 성공")
 		
@@ -45,88 +62,22 @@ function loginChk(){
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="resources/css/tailwind.output.css" />
-    <script
-      src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"
-      defer
-    ></script>
-    <script src="resources/js/init-alpine.js"></script>
+    <link rel="stylesheet" href="resources/css/common3.css" />
+
+  <title>Sign in</title>
+
 </head>
-  <body>
-    <div class="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
-      <div
-        class="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800"
-      >
-        <div class="flex flex-col overflow-y-auto md:flex-row">
-          <div class="h-32 md:h-auto md:w-1/2">
-            <img
-              aria-hidden="true"
-              class="object-cover w-full h-full dark:hidden"
-              src="../assets/img/login-office.jpeg"
-              alt="Office"
-            />
-            <img
-              aria-hidden="true"
-              class="hidden object-cover w-full h-full dark:block"
-              src="../assets/img/login-office-dark.jpeg"
-              alt="Office"
-            />
-          </div>
-          <div class="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
-            <div class="w-full">
-              <h1
-                class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200"
-              >
-                Login
-              </h1>
-              <label class="block text-sm">
-                <span class="text-gray-700 dark:text-gray-400">ID</span>
-                <input
-                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                  placeholder="Jane Doe" name="user_id" id="user_id"
-                />
-              </label>
-              <label class="block mt-4 text-sm">
-                <span class="text-gray-700 dark:text-gray-400">Password</span>
-                <input
-                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                  placeholder="***************" name="user_password" id="user_password"
-                  type="password"
-                />
-              </label>
+<body>
+  <div class="main">
+    <p class="sign" align="center">Sign in</p>
+    <div class="form1">
+      <input class="un " id="userId" name="userId" type="text" align="center" placeholder="Username">
+      <input class="pass" id="userPassword" name="userPassword" type="password" align="center" placeholder="Password">
+      <input class="submit" id="loginBtn" type="button" value="Log in" style="background-color: #2186db;">  
+      <div class="loginChk" id="loginChk">
 
-              <!-- You should use a button here, as the anchor is only used for the example  -->
-              <a
-                class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-                id = "login_btn"
-              >
-                Log in
-              </a>
-
-              <hr class="my-8" />
-
-
-
-              <p class="mt-4">
-                <a
-                  class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  href="./forgot-password.html"
-                >
-                  Forgot your password?
-                </a>
-              </p>
-              <p class="mt-1">
-                <a
-                  class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  href="./create-account.html"
-                >
-                  Create account
-                </a>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>
+ 	</div>
+    </div>    
+     </div>
+</body>
 </html>

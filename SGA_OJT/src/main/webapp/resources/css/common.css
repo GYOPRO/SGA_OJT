@@ -249,29 +249,29 @@ form label{
 	padding-top: 5px;
 	height: 50px;
 }
-.checkpw{
-	height : 50px;
-	margin-bottom:10px;
-	margin-top:10px;
+.checkPw{
+	display:table;
+	width : 500px;
+	padding-top: 5px;
+	padding-bottom : 10px;
+	height: 50px;
 }
-#idcheck{
+#idCheck{
+	
 	margin : 10px;
 	height : 30px;
 	display: inline-block;
 	width: 80px;
 	font-size: 13px;
 }
-#checkpw{
-	width : 600px;
-	height: none;
-}
-.checkpw{
-	width : 500px;
-	display: inline-block;
-	
+
+span{
+	line-height: 10px;
 }
 
-
+#userId{
+	padding-left: 100px;
+}
 #signbtn { 
 	color: white;
 	background-color:#2186db;

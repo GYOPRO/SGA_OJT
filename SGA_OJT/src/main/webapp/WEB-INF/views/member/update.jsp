@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Insert title here</title>
+<title>Update User</title>
 <!--meta -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,16 +12,11 @@
 <link href="resources/css/update.css" rel="stylesheet">
 <!-- js -->
 <script src="http://code.jquery.com/jquery-3.5.1.js"></script>
-<script>
+<script type="text/javascript">
 $(document).ready(function(){
     	selectAllMember();
 });
-
-function openInfo(e){
-	window.open("userinfo?user_id="+e+"","member","width=640, height=400")
-}
     
-   
     function selectAllMember() {
     	
     	var listurl = "getMemberList"
@@ -32,25 +27,23 @@ function openInfo(e){
     		type : 'post',
     		dataType : 'json',
     		success : function(res){
-    			
     			var memberList = res.memberList;
-    			
     			var list="" ;
     			$.each(memberList,function(i,item){
-    				list += '<tr class="styleone" onclick=openInfo("' + item.user_id + '")>';
-    				list += '<td>' + item.user_id + '</td>';
-    				list += '<td>' + item.user_password + '</td>';
-    				list += '<td>' + item.allow_ip + '</td>';
-    				list += '<td>' + item.access_ip + '</td>';
-    				list += '<td>' + item.lock_dtm + '</td>';
-    				list += '<td>' + item.last_login_dtm + '</td>';
-    				list += '<td>' + item.fail_count + '</td>';
-    				list += '<td>' + item.dek + '</td>';
-    				list += '<td>' + item.salt + '</td>';
-    				list += '<td>' + item.kek + '</td>';
-    				list += '<td>' + item.key + '</td>';
-    				list += '</tr>';	
-    			})//each
+    				
+    			    list += '<tr class="styleone">';
+    			    
+    			    list += '<td><input type="text" value="' + item.userId + '"></td>';
+    			    list += '<td>' + item.userPassword + '</td>';
+    			    list += '<td>' + item.allow_ip + '</td>';
+    			    list += '<td>' + item.access_ip + '</td>';
+    			    list += '<td>' + item.lock_dtm + '</td>';
+    			    list += '<td>' + item.last_login_dtm + '</td>';
+    			    list += '<td>' + item.fail_count + '</td>';
+    			    list += '<td class="deletemember"><input type="submit" value="삭제"/></td>';
+    			    list += '</form>';
+    			    list += '</tr>';
+    			});//each
 
     			$('#memberList').append(list);
     		},//success
@@ -58,22 +51,17 @@ function openInfo(e){
     			alert("통신에러");
     		}
     	});//ajax
-
-    };
-    </script>
-    <script>
-    	
+    };//selectAllMember
     </script>
 </head>
 <body>
-
 	<main class="list_main">
 		<section class="ptlist_sec1">
 			<h3 class="h3">사용자 수정/삭제</h3>
 			<table id="inventory">
             <colgroup>
-              <col width="100px"><col width="100px"><col width="100px"><col width="150px"><col width="150px"><col width="150px"><col width="100px">
-               <col width="100px"><col width="100px"><col width="50px" span="2">
+              <col width="100px"><col width="100px"><col width="100px"><col width="100px"><col width="150px"><col width="150px"><col width="100px">
+               <col width="100px"><col width="100px">
             </colgroup>
             <thead >
                <tr>
@@ -84,19 +72,15 @@ function openInfo(e){
                   <th>LOCK_DTM</th>
                   <th>LAST_LOGIN_DTM</th>
                   <th>FAIL_COUT</th>
-                  <th>DEK</th>
-                  <th>SALT</th>
-                  <th>KEK</th>
-                  <th>KEY</th>
-                  <th colspan="2"></th>
+                  <th>수정</th>
+                  <th>삭제</th>
                </tr>
             </thead>
             <tbody id="memberList">
-               
+               <!-- ajax -->
             </tbody>
          </table>
 		</section>
 	</main>
-
 </body>
 </html>

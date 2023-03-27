@@ -23,12 +23,7 @@
     
 
     
-    function openInfo(e){
-
-    	window.open("userinfo?user_id="+e+"","member","width=640, height=400, left=1000, top=200")
-    }
-    
-    function selectAllMember(var user_id) {
+    function selectAllMember() {
     	var listurl = "getMemberList"
     	let list = [];
     	
@@ -38,25 +33,25 @@
     		dataType : 'json',
     		success : function(res){
     			console.log("통신성공");
-    			console.log("res" , res);
-    			console.log("res.memberList", res.memberList);
+
     			var memberList = res.memberList;
     			
     			var list = '';
     			$.each(memberList,function(i,item){
-    				console.log("item" , item);
-    				list += '<tr class="text-gray-700 dark:text-gray-400" onclick=openInfo("' + item.user_id + '")>'
-    				list += '<td class="px-4 py-3 text-sm">' + item.user_id + '</td>';
-    				list += '<td class="px-4 py-3 text-sm">' + item.user_password + '</td>';
+
+    				list += '<tr class="text-gray-700 dark:text-gray-400" )>'
+    				list += '<td class="px-4 py-3 text-sm">' + item.userId + '</td>';
+    				list += '<td class="px-4 py-3 text-sm">' + item.userPassword + '</td>';
     				list += '<td class="px-4 py-3 text-sm">' + item.allow_ip + '</td>';
     				list += '<td class="px-4 py-3 text-sm">' + item.access_ip + '</td>';
     				list += '<td class="px-4 py-3 text-sm">' + item.lock_dtm + '</td>';
     				list += '<td class="px-4 py-3 text-sm">' + item.last_login_dtm + '</td>';
     				list += '<td class="px-4 py-3 text-sm">' + item.fail_count + '</td>';
+    				list += '<td><a href="userinfo?userId='+item.userId+'">sdsd</a></td>'
     				list += '</tr>';
     				
     			})//each
-    			console.log(list);
+
     			$('#memberList').append(list);
     		},//success
     		error:function(){
@@ -117,7 +112,7 @@
                 </svg> <span class="ml-4">비밀번호 찾기<span></a></li>
 				<li class="relative px-6 py-3"><a
 					class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-					href="charts.html"> <svg class="w-5 h-5"
+					href="/sol"> <svg class="w-5 h-5"
 							aria-hidden="true" fill="none" stroke-linecap="round"
 							stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
 							stroke="currentColor">
@@ -129,12 +124,6 @@
 			</ul>
 			
 			<div class="px-6 my-6">
-            <button
-              class="flex items-center justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-            >
-              Create account
-              <span class="ml-2" aria-hidden="true">+</span>
-            </button>
           </div>
 		</div>
 	</aside>
@@ -209,7 +198,8 @@
 		                      <th class="px-4 py-3">access_ip</th>
 		                      <th class="px-4 py-3">lock_dtm</th>
 		                      <th class="px-4 py-3">last_login_dtm</th>
-		                      <th class="px-4 py-3">fail_count</th>            
+		                      <th class="px-4 py-3">fail_count</th>    
+		                      <th class="px-4 py-3">수정</th>          
 		                    </tr>
         	          </thead>
             	      <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800" id="memberList">

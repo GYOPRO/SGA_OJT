@@ -1,0 +1,81 @@
+/* Overall styling for the form */
+#container {
+  width: 500px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  font-size: 24px;
+  text-align: center;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+span {
+  display: block;
+  margin-bottom: 10px;
+}
+
+button[type="button"],
+button[type="submit"] {
+  display: inline-block;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #337ab7;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Styling for the password validation checks */
+.pwCheck1,
+.pwCheck2 {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  width: 100%;
+}
+
+#checkPw1,
+#checkPw2 {
+  font-size: 12px;
+
+}
+
+#checkPw1.valid,
+#checkPw2.valid {
+  color: #4CAF50;
+}
+
+#checkPw1.invalid,
+#checkPw2.invalid {
+  color: #ff0000;
+}
+
+/* Styling for the user ID duplication check */
+#checkId {
+  font-size: 12px;
+}
+
+#checkId.valid {
+  color: #4CAF50;
+}
+
+#checkId.invalid {
+  color: #ff0000;
+}

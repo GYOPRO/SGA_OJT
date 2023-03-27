@@ -2,29 +2,32 @@ package com.sga.sol.vc.vo;
 
 public class MemberVo {
 
-	String user_id,user_password;
+	String userId,userPassword;
 	int fail_count;
 	String allow_ip,access_ip;
 	String dek,kek;
 	String salt, key;
-	
 	String lock_dtm,last_login_dtm;
-	public MemberVo() {}
-	//sd
 	
-	public String getUser_id() {
-		return user_id;
-	}
-	public void setUser_id(String user_id) {
-		this.user_id = user_id;
+	public MemberVo() {}
+	
+
+	public String getUserId() {
+		return userId;
 	}
 
-	public String getUser_password() {
-		return user_password;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
-	public void setUser_password(String user_password) {
-		this.user_password = user_password;
+
+	public String getUserPassword() {
+		return userPassword;
 	}
+
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
+	}
+
 	public int getFail_count() {
 		return fail_count;
 	}
@@ -43,6 +46,30 @@ public class MemberVo {
 	public void setAccess_ip(String access_ip) {
 		this.access_ip = access_ip;
 	}
+	public String getDek() {
+		return dek;
+	}
+	public void setDek(String dek) {
+		this.dek = dek;
+	}
+	public String getKek() {
+		return kek;
+	}
+	public void setKek(String kek) {
+		this.kek = kek;
+	}
+	public String getSalt() {
+		return salt;
+	}
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+	public String getKey() {
+		return key;
+	}
+	public void setKey(String key) {
+		this.key = key;
+	}
 	public String getLock_dtm() {
 		return lock_dtm;
 	}
@@ -55,39 +82,8 @@ public class MemberVo {
 	public void setLast_login_dtm(String last_login_dtm) {
 		this.last_login_dtm = last_login_dtm;
 	}
-
-	public String getDek() {
-		return dek;
-	}
-
-	public void setDek(String dek) {
-		this.dek = dek;
-	}
-
-	public String getKek() {
-		return kek;
-	}
-
-	public void setKek(String kek) {
-		this.kek = kek;
-	}
-
-	public String getSalt() {
-		return salt;
-	}
-
-	public void setSalt(String salt) {
-		this.salt = salt;
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
-	}
-
+	
+	
 
 	
 }

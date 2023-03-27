@@ -2,69 +2,73 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.sga.sol.vc.mapper.MemberMapper">
+
 	<!-- 전체 유저 불러오기 -->
 	<select id="selectAllMember" resultType="membervo">
- 		select user_id,user_password,fail_count,allow_ip,lock_dtm,last_login_dtm,access_ip,dek,kek,salt,key from member order by user_id;
+ 		select userId,userPassword,fail_count,allow_ip,lock_dtm,last_login_dtm,access_ip,dek,kek,salt,key from member order by userId;
 	</select>
 
 	<!-- 아이디 중복체크 -->
-	<select id="checkId" resultType="Int" parameterType="String">
-		select count(user_id) from member where user_id = #{user_id}
+	<select id="checkId" resultType="int" parameterType="String">
+		select count(userId) as cnt from member where userId= #{userId};
 	</select>
 	
 	<!-- 회원 등록 -->
 	<insert id="insertMember" parameterType="membervo">
-		insert into member(user_id,user_password,dek,salt) values(#{user_id},#{user_password},#{dek},#{salt});
+		insert into member(userId,userPassword,dek,salt) values(#{userId},#{userPassword},#{dek},#{salt});
 	</insert>
 	
 	<!-- 유저 정보 조회(1명) -->
 	<select id="selectOneUser" parameterType="String" resultType="membervo">
-		select user_id,dek,salt,kek,key from member where user_id = #{user_id};
+		select userId, dek, salt, kek, key from member where userId = #{userId};
 	</select>
 	
 	<!-- 회원정보 수정 -->
 	<update id="updateMemberByAdmin" parameterType="membervo">
-		update member set user_ip = #{user_id}, user_password = #{user_password} where user_id = #{user_id}
+		update member set userId = #{userId}, userPassword = #{userPassword} where userId = #{userId}
 	</update>
 
 	<!-- 로그인 -->
 	<select id="loginChk" parameterType="membervo" resultType="int">
-		select count(user_id) from member where user_id = #{user_id} and user_password = #{user_password}
+		select count(userId) from member where "userId" = #{userId} and userPassword = #{userPassword}
 	</select>
 
 	<!-- 실패 횟수 증가 -->
 	<update id="updateFailLogin" parameterType="membervo" >
-		update member set fail_count = coalesce(fail_count,0)+1 where user_id = #{user_id}
+		update member set fail_count = coalesce(fail_count,0)+1 where userId = #{userId}
 	</update>
 	
 	<!-- 실패 횟수 0으로 만들기 -->
 	<update id="updateFailLoginTo0" parameterType="membervo" >
-		update member set fail_count = coalesce(fail_count,0)+1 where user_id = #{user_id}
+		update member set fail_count = coalesce(fail_count,0)+1 where userId = #{userId}
 	</update>
 	
 	<!-- 실패 횟수 조회 -->
 	<select id="selectFailLogin"  parameterType="membervo" resultType="int">
-		select fail_count from member where user_id = #{user_id}
+		select fail_count from member where userId = #{userId}
 	</select>
-	
 	<!-- 가장 최근 로그인 시간 업데이트 -->
 	<update id="updateLoginDtm" parameterType="membervo">
-		update member set last_login_dtm = to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS') where user_id = #{user_id} 
+		update member set last_login_dtm = to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS') where userId = #{userId} 
 	</update>
 	
 	<!-- 로그인 잠금 시간 업데이트 -->
 	<update id="updateLockDtm" parameterType="membervo">
-		update member set lock_dtm = to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS') where user_id = #{user_id} 
+		update member set lock_dtm = to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS') where userId = #{userId} 
 	</update>
 	
 	<!-- 회원가입 salt, key, dek, 추가 -->
 	<insert id="insertMember2" parameterType="membervo">
-		insert into member(user_id,user_password,dek,salt,kek,key) values(#{user_id},#{user_password},#{dek},#{salt},#{kek},#{key});
+		insert into member(userId,userPassword,dek,salt,kek,key) values(#{userId},#{userPassword},#{dek},#{salt},#{kek},#{key});
 	</insert>
 	
 	<!-- 로그인 확인2 -->
 	<select id="loginChk2" parameterType="membervo" resultType="membervo">
-		select user_id,user_password,dek,salt,kek,key from member where user_id = #{user_id}
+		select userId ,userPassword ,dek,salt,kek,key from member where userId  = #{userId};
 	</select>
 	
+	<!-- 유저 삭제	 -->
+	<delete id="deleteUser" parameterType="membervo">
+		delete from member where userId = #{userId}
+	</delete>
 </mapper>

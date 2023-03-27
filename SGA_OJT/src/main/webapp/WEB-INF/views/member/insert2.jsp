@@ -21,28 +21,20 @@
 <title>registe</title>
 
 <script type="text/javaScript">
-var idChecked = false; //중복 확인을 거쳤는지 확인
-var pwChecked1 = false;
-var pwChecked2 = false;
+idChecked = false; //중복 확인을 거쳤는지 확인
+pwChecked1 = false;
+pwChecked2 = false;
 
 $(document).ready(function(){
 	
 
 	
 	$("#idCheck").on('click',function(e){
-		var regex = /^[\w-]{5,20}$/;
-		var userId = $("#userId").val();
-		if(userId == ""){
+		if($("#userId").val() == ""){
 			$("#checkId").html("아이디를 입력해주세요")
             $("#checkId").attr('color','red');
 		}else{
-			if(regex.test(userId)){
-				checkId();
-			}else {
-				$("#checkId").html("5~20자의 영문 소문자, 숫자와 특수기호(_),(-)만 사용 가능합니다.")
-	            $("#checkId").attr('color','red');
-			}
-			
+			checkId();
 		}
 	});
 	
@@ -50,7 +42,7 @@ $(document).ready(function(){
 	$("#userPassword").on('focusout', function(e){
 		checkPw1($(this).val());
 		checkPw2($("#checkPassword").val()); // 비밀번호 확인란도 확인
-		
+		setAble();	
 	});
 	
 	//비밀번화 재확인
@@ -60,36 +52,26 @@ $(document).ready(function(){
 	 
 	//userId 변경 시
     $("#userId").on('change', function(){
-        idChecked = false;
-        $("#checkId").html("")
+    	changeId();
+    	console.log(idChecked);
     });
 	
-	//가입하기 누를 때 한번더 확인
 	$("#signBtn").on('click',function(e){
-		
+		console.log("버튼 클릭")
+		setAble();
 		if(idChecked === false){
-			$("#checkInsert").html("아이디를 확인해주세요")
 			e.preventDefault();
+			console.log("아이디 변경 막기 성공")
 		}
-		else if(pwChecked1 === false || pwChecked2 === false ){
-			$("#checkInsert").html("비밀번호를 다시 한번 확인해 주세요")
-			e.preventDefault();
-		}else {
-			$("#insertForm").submit();
-		}
-
-	
-
+		
 	});
 
 });//ready
 
-
-
 function checkId(){
 	var checkUrl = 'checkId';
 	var userId = $('#userId').val();
-
+	
 	$.ajax({
 		url : checkUrl,
 		type : 'post',
@@ -100,14 +82,13 @@ function checkId(){
 			if(cnt == 0  ){ //cnt가 1이 아니면(=0일 경우) -> 사용 가능한 아이디 
                 $("#checkId").html("사용 가능한 아이디입니다.")
                 $("#checkId").attr('color','green');
-                $("#checkInsert").html("")
                 idChecked = true;
             } else if(cnt == 1) { // cnt가 1일 경우 -> 이미 존재하는 아이디
             	$("#checkId").html("이미 사용중인 아이디입니다.")
                 $("#checkId").attr('color','red');
-            	$("#checkInsert").html("")
                 idChecked = false;                
 			} else if(userId == ""){
+				alert(x);
 				idChecked = false;
 			}
 		},
@@ -117,37 +98,41 @@ function checkId(){
 	});
 }
 
+//중복검사 후 아이디 변경 되었을 때
+function changeId(){
+	if($("#userId").val() == ""){
+		return
+	}else{
+	idChecked = false;
+	$("#checkId").html("");
+	}
+}
+
 //비밀번호 조건 확인
 function checkPw1(pw){
 	var id = $("#userId").val();
-	var reg1 = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,16}$/; //8~16 대,소문자,숫자,특수문자
-	var reg2 = /(.)\1{3,}/i; // 같은 문자 4개 이상
-	var reg3 = /(.)((?=\1+1)\1){2}/i; //키보드 연속 배열
-
+	var reg = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,16}$/;
+	var streamReg = /(.)\1{3,}/i; // {3,} 3번이상 반복 / i 대소문자 구분x / 
 	/* var hangulcheck = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/; */
+	
 	if(id =="" || idChecked === false){
 		$("#checkId").html("아이디 입력 및 중복 확인 해주세요");
 		$("#checkId").attr('color','red');
 		$("#userId").focus();
 		$("#userPassword").val("");
 	}
-	else if(false === reg1.test(pw) ){
+	else if(false === reg.test(pw) || /(\w)\1\1\1/.test(pw)){
 		$("#checkPw1").html("9~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
 		$("#checkPw1").attr('color','red');
 		pwChecked1 = false;
 	}
-	else if(reg2.test(pw)){
-		$("#checkPw1").html("동일한 문자는 4번 이상 연속적으로 사용할 수 없습니다.")
-		$("#checkPw1").attr('color','red');
-		pwChecked1 = false;
-	}
 	else if(pw.search(id) > -1){
-		$("#checkPw1").html("아이디가 포함된 비밀번호는 사용할 수 없습니다.")
+		$("#checkPw1").html("아이디와 동일한 비밀번호를 사용할 수 없습니다.")
 		$("#checkPw1").attr('color','red');
 		pwChecked1 = false;
 	}
-	else if(reg3.test(pw)){
-		$("#checkPw1").html("키보드의 연속된 배열은 나열할 수 없습니다.")
+	else if(streamReg.test(pw) === true){
+		$("#checkPw1").html("연속된 배열은 사용할 수 없습니다.")
 		$("#checkPw1").attr('color','red');
 		pwChecked1 = false;
 	}
@@ -157,7 +142,6 @@ function checkPw1(pw){
 	}
 	
 }
-
 
 function checkPw2(pw){
 	
@@ -175,12 +159,22 @@ function checkPw2(pw){
 		else {
 			$("#checkPw2").html('비밀번호가 일치합니다.');
 			$("#checkPw2").attr('color','green');
-			$("#checkInsert").html("")
 			pwChecked2 = true;
 		}
-	
+	setAble();
 	}
 	
+	function setAble(){
+		console.log("idChecked : " + idChecked + " pwChecked1 : " + pwChecked1+ " pwChecked2 : " + pwChecked2);
+		if(idChecked && pwChecked1 && pwChecked2){
+			//아이디와 비밀번호 둘다 유효성 검사를 마쳤다면
+			$("button[type=submit]").removeAttr("disabled");
+		}
+		else{
+			checkPw2($(this).val());
+			$("button[type=submit]").attr("disabled","")
+		}
+	}
 
 </script>
 
@@ -204,7 +198,6 @@ function checkPw2(pw){
                 <input type="password"  placeholder="비밀번호 재입력" id="checkPassword" class="pwCheck2">
                 <span><font id="checkPw2"></font></span>
                 <button id="signBtn" class="button2 button-md button-primary button-winona wow fadeInRight" type="button" formmethod="post" >가입하기</button>
-                <span><font id="checkInsert"></font></span>
             </form>
         </div>
     </div>

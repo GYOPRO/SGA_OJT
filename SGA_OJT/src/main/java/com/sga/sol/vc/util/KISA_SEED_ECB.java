@@ -941,26 +941,10 @@ public class KISA_SEED_ECB {
 	    System.out.print("\n\n\n");
 	    
 	    
-	    
 	    pbCipher = null;
 	    pbPlain = null;
 	    
 	    
-	    
-	    pbCipher = SEED_ECB_Encrypt(pbUserKey, pbData1, 0, 2);
-	    
-	    pbPlain = SEED_ECB_Decrypt(pbUserKey, pbCipher, 0, 16);
-		
-		System.out.print("Ciphertext(enc)\t: ");
-	    for (int i=0; i<16; i++)	System.out.print(Integer.toHexString(0xff&pbCipher[i])+" ");
-	    System.out.print("\n");
-	    
-		System.out.print("Plaintext(dec)\t: ");
-	    for (int i=0; i<2; i++)	System.out.print(Integer.toHexString(0xff&pbPlain[i])+" ");
-	    System.out.print("\n\n");
-
-	    pbCipher = null;
-	    pbPlain = null;
 	    
 	    pbCipher = SEED_ECB_Encrypt(pbUserKey, pbData1, 0, 2);
 	    

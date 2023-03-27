@@ -13,14 +13,12 @@ $(document).ready(function(){
     selectOneMember(); // 예시로 1을 넘김
 });
 
-let query = window.location.search;
-let param = new URLSearchParams(query);
-let user_id = param.get('user_id');
-
-console.log(user_id); 
+var query = window.location.search;
+var param = new URLSearchParams(query);
+var userId = param.get('userId');
 
 function selectOneMember() {
-    var listurl = "getMember?user_id="+user_id;
+    var listurl = "getMember?userId="+userId;
     let list = [];
 
     $.ajax({
@@ -28,8 +26,15 @@ function selectOneMember() {
         type : 'get',
         dataType : 'json',
         success : function(res){
-            console.log("통신성공");
-
+        	var list =""
+        	console.log("통신성공");
+			console.log(res);
+			list += '<form action="deleteUser" method="post">'
+        	list += '<input type="text" name="userId" value="'+res.userId+'" >';
+        	list += '<button type="submit" >삭제</button>';
+        	list += '</form>';
+			
+        	$("#userInfo").append(list);
         },
         error:function(){
             console.log("통신에러");
@@ -40,7 +45,8 @@ function selectOneMember() {
 
 </head>
 <body>
-<div class="userInfo">
+<div id="userInfo">
+	<span id="user"></span>
 
 </div>
 </body>
