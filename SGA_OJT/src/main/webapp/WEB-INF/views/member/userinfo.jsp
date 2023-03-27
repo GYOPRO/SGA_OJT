@@ -31,6 +31,8 @@ function selectOneMember() {
 			console.log(res);
 			list += '<form action="deleteUser" method="post">'
         	list += '<input type="text" name="userId" value="'+res.userId+'" >';
+        	list += '<input type="text" name="fail_count" value="'+res.fail_count+'" >';
+        	list += '<button type="submit" >수정</button>';
         	list += '<button type="submit" >삭제</button>';
         	list += '</form>';
 			

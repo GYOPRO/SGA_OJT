@@ -2,6 +2,7 @@ package com.sga.sol.vc.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -108,17 +109,21 @@ public class MemberController {
 	}
 
 	// 사용자 정보 수정
-	@RequestMapping("/updateMemberByAdmin")
-	public String updateMemberBYAdmin(@RequestParam("userId") String userId) throws Exception {
-		memberservice.updateMemberByAdmin(userId);
-		return "redirect:/list";
+	@RequestMapping("/updateUser")
+	public String updateMemberBYAdmin(MemberVo vo,@RequestParam("oldUserId") String oldUserId) throws Exception {
+		Map<String, Object> paramMap = new HashMap();
+		paramMap.put("userId", vo.getUserId());
+		paramMap.put("oldUserId", oldUserId);
+		memberservice.updateUser(paramMap);
+		return "redirect:/updateMember";
 	}
 	
 	//사용자 삭제
 	@RequestMapping("/deleteUser")
 	public String deleteUser(MemberVo vo) throws Exception{
+		System.out.println(vo.getUserId());
 		memberservice.deleteUser(vo);
-		return "redirect:/list";
+		return "redirect:/updateMember";
 	}
 
 }

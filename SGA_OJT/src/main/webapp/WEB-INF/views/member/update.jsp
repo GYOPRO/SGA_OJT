@@ -14,9 +14,33 @@
 <script src="http://code.jquery.com/jquery-3.5.1.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-    	selectAllMember();
+    selectAllMember();
 });
-    
+
+	var originalValue = $("#oldUserId").val(); // 수정 전에 userId input 요소의 value 값 저장
+	
+	function updateRow(button) {
+	  var userId = $("#userId").val();
+	  var hiddenUserId = $("#hiddenUserId");
+	  hiddenUserId.val(userId);
+	  if(confirm("수정하시겠습니까?")) {
+	    button.form.submit();
+	  } else {
+	    $("#userId").val(originalValue); // 안바뀜..
+	    return;
+	  }
+	}
+	
+	function deleteConfirm(button) {
+	    var confirmed = confirm("삭제하시겠습니까?");
+
+	    if (confirmed) {
+	        button.form.submit();
+	    } else {
+	        return false;
+	    }
+	}
+	
     function selectAllMember() {
     	
     	var listurl = "getMemberList"
@@ -30,19 +54,23 @@ $(document).ready(function(){
     			var memberList = res.memberList;
     			var list="" ;
     			$.each(memberList,function(i,item){
+    				list += '<tr class="styleone">';
+    				list += '<td><input type="text" id="userId" value="' + item.userId + '"></td>';
+    				list += '<td>' + item.userPassword + '</td>';
+    				list += '<td>' + item.allow_ip + '</td>';
+    				list += '<td>' + item.access_ip + '</td>';
+    				list += '<td>' + item.lock_dtm + '</td>';
+    				list += '<td>' + item.last_login_dtm + '</td>';
+    				list += '<td>' + item.fail_count + '</td>';
+    				list += '<td><form method="post" action="updateUser">';
+    				list += '<input type="hidden" name="oldUserId" value="' + item.userId + '">';
+    				list += '<input type="hidden" id="hiddenUserId" name="userId" value="' + item.userId + '">';
+    				list += '<button type="button" onclick="updateRow(this)">수정</button></form></td>';
     				
-    			    list += '<tr class="styleone">';
-    			    
-    			    list += '<td><input type="text" value="' + item.userId + '"></td>';
-    			    list += '<td>' + item.userPassword + '</td>';
-    			    list += '<td>' + item.allow_ip + '</td>';
-    			    list += '<td>' + item.access_ip + '</td>';
-    			    list += '<td>' + item.lock_dtm + '</td>';
-    			    list += '<td>' + item.last_login_dtm + '</td>';
-    			    list += '<td>' + item.fail_count + '</td>';
-    			    list += '<td class="deletemember"><input type="submit" value="삭제"/></td>';
-    			    list += '</form>';
-    			    list += '</tr>';
+    				list += '<td><form method="post" action="deleteUser" onsubmit="return deleteConfirm(this);">';
+    				list += '<input type="hidden" name="userId" value="' + item.userId + '">';
+    				list += '<button type="submit" >삭제</button></form></td>';
+    				list += '</tr>';
     			});//each
 
     			$('#memberList').append(list);
@@ -52,6 +80,9 @@ $(document).ready(function(){
     		}
     	});//ajax
     };//selectAllMember
+    
+
+
     </script>
 </head>
 <body>

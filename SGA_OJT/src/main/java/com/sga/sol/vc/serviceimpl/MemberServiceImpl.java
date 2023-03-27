@@ -1,6 +1,7 @@
 package com.sga.sol.vc.serviceimpl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,8 +40,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void updateMemberByAdmin(String userId) throws Exception {
-		membermapper.updateMemberByAdmin(userId);
+	public void updateUser(Map<String, Object> paramMap) throws Exception {
+		membermapper.updateUser(paramMap);
 	}
 
 	@Override

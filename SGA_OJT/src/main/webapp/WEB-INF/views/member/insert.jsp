@@ -122,14 +122,21 @@ function checkPw1(pw){
 	var id = $("#userId").val();
 	var reg1 = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,16}$/; //8~16 대,소문자,숫자,특수문자
 	var reg2 = /(.)\1{3,}/i; // 같은 문자 4개 이상
-	var reg3 = /(.)((?=\1+1)\1){2}/i; //키보드 연속 배열
+	var reg3 = ["1234567890", "qwertyuiop", "asdfghjkl", "zxcvbnm"];
+	var reg3Chk = false;
+	for(let i = 0 ; i < pw.length-2 ; i++){
+	  const sliceValue = pw.substring(i,i+3);
+	  
+	  if(reg3.some((code) => code.includes(sliceValue))){
+	    reg3Chk = true;
+	  }
+	}
 
 	/* var hangulcheck = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/; */
 	if(id =="" || idChecked === false){
 		$("#checkId").html("아이디 입력 및 중복 확인 해주세요");
 		$("#checkId").attr('color','red');
 		$("#userId").focus();
-		$("#userPassword").val("");
 	}
 	else if(false === reg1.test(pw) ){
 		$("#checkPw1").html("9~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
@@ -146,7 +153,7 @@ function checkPw1(pw){
 		$("#checkPw1").attr('color','red');
 		pwChecked1 = false;
 	}
-	else if(reg3.test(pw)){
+	else if(reg3Chk){
 		$("#checkPw1").html("키보드의 연속된 배열은 나열할 수 없습니다.")
 		$("#checkPw1").attr('color','red');
 		pwChecked1 = false;

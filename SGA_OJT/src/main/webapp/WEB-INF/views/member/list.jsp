@@ -47,7 +47,6 @@
     				list += '<td class="px-4 py-3 text-sm">' + item.lock_dtm + '</td>';
     				list += '<td class="px-4 py-3 text-sm">' + item.last_login_dtm + '</td>';
     				list += '<td class="px-4 py-3 text-sm">' + item.fail_count + '</td>';
-    				list += '<td><a href="userinfo?userId='+item.userId+'">sdsd</a></td>'
     				list += '</tr>';
     				
     			})//each
@@ -109,7 +108,7 @@
 							stroke="currentColor">
                   <path
 								d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                </svg> <span class="ml-4">비밀번호 찾기<span></a></li>
+                </svg> <span class="ml-4">내 정보 수정/삭제<span></a></li>
 				<li class="relative px-6 py-3"><a
 					class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
 					href="/sol"> <svg class="w-5 h-5"
@@ -199,7 +198,6 @@
 		                      <th class="px-4 py-3">lock_dtm</th>
 		                      <th class="px-4 py-3">last_login_dtm</th>
 		                      <th class="px-4 py-3">fail_count</th>    
-		                      <th class="px-4 py-3">수정</th>          
 		                    </tr>
         	          </thead>
             	      <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800" id="memberList">

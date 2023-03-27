@@ -1,6 +1,8 @@
 package com.sga.sol.vc.mapper;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.sga.sol.vc.vo.MemberVo;
 
@@ -18,7 +20,7 @@ public interface MemberMapper {
 	MemberVo selectOneUser(String userId) throws Exception;
 	
 	//사용자 수정
-	void updateMemberByAdmin(String userId) throws Exception;
+	void updateUser(Map<String, Object> paramMap) throws Exception;
 	
 	//로그인 확인(아이디, 비밀번호)
 	int loginChk(MemberVo vo) throws Exception;

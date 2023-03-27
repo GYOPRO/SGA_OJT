@@ -24,8 +24,8 @@
 	</select>
 	
 	<!-- 회원정보 수정 -->
-	<update id="updateMemberByAdmin" parameterType="membervo">
-		update member set userId = #{userId}, userPassword = #{userPassword} where userId = #{userId}
+	<update id="updateUser" parameterType="map">
+		update member set userId = #{userId} where userId = #{oldUserId}
 	</update>
 
 	<!-- 로그인 -->
