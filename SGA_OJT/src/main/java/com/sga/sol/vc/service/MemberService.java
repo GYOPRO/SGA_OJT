@@ -3,10 +3,6 @@ package com.sga.sol.vc.service;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Service;
-
-import com.sga.sol.vc.util.ECBPasswordUtil;
-import com.sga.sol.vc.util.sha3;
 import com.sga.sol.vc.vo.MemberVo;
 
 public interface MemberService {

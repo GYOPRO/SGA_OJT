@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
 encoding//src/main/java/com/sga/sol/vc/controller/MemberController.java=UTF-8
 encoding//src/main/java/com/sga/sol/vc/mapper/MemberMapper.java=UTF-8
+encoding//src/main/webapp/WEB-INF/views/member/virtualKeyBoardTest.jsp=UTF-8
 encoding//src/test/java/com/sga/sol/test/sha3_test.java=UTF-8

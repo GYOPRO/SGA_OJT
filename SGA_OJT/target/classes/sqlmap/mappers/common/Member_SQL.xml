@@ -15,7 +15,7 @@
 	
 	<!-- 회원 등록 -->
 	<insert id="insertMember" parameterType="membervo">
-		insert into member(userId,userPassword,dek,salt) values(#{userId},#{userPassword},#{dek},#{salt});
+		insert into member(userId,userPassword,dek,salt,auth) values(#{userId},#{userPassword},#{dek},#{salt},#{userAuth});
 	</insert>
 	
 	<!-- 유저 정보 조회(1명) -->
@@ -71,4 +71,14 @@
 	<delete id="deleteUser" parameterType="membervo">
 		delete from member where userId = #{userId}
 	</delete>
+	
+	<!-- 스프링 시큐리티 연습 -->
+	<!-- login -->
+	<select id="selectLogin" parameterType="String" resultType="resultMap">
+		SELECT userId AS ID,
+		userPassword AS PASSWORD,
+		'ROLE_' || AUTHORITY AS AUTHORITY
+		FROM MEMBER
+		WHERE userId = #{loginId}
+	</select>
 </mapper>

@@ -26,23 +26,22 @@ var pwChecked1 = false;
 var pwChecked2 = false;
 
 $(document).ready(function(){
-	
 
-	
 	$("#idCheck").on('click',function(e){
 		var regex = /^[\w-]{5,20}$/;
 		var userId = $("#userId").val();
 		if(userId == ""){
-			$("#checkId").html("아이디를 입력해주세요")
+			$("#checkId").html("아이디를 확인해주세요")
             $("#checkId").attr('color','red');
-		}else{
+		}
+		else{
 			if(regex.test(userId)){
 				checkId();
-			}else {
+			}
+			else {
 				$("#checkId").html("5~20자의 영문 소문자, 숫자와 특수기호(_),(-)만 사용 가능합니다.")
 	            $("#checkId").attr('color','red');
-			}
-			
+			}			
 		}
 	});
 	
@@ -50,7 +49,6 @@ $(document).ready(function(){
 	$("#userPassword").on('focusout', function(e){
 		checkPw1($(this).val());
 		checkPw2($("#checkPassword").val()); // 비밀번호 확인란도 확인
-		
 	});
 	
 	//비밀번화 재확인
@@ -74,12 +72,10 @@ $(document).ready(function(){
 		else if(pwChecked1 === false || pwChecked2 === false ){
 			$("#checkInsert").html("비밀번호를 다시 한번 확인해 주세요")
 			e.preventDefault();
-		}else {
+		}
+		else {
 			$("#insertForm").submit();
 		}
-
-	
-
 	});
 
 });//ready
@@ -95,19 +91,21 @@ function checkId(){
 		type : 'post',
 		data : {userId:userId},
 		dataType : 'json',
-		success : function(cnt){
+		success : function(cnt) {
 			console.log("통신 성공");
 			if(cnt == 0  ){ //cnt가 1이 아니면(=0일 경우) -> 사용 가능한 아이디 
                 $("#checkId").html("사용 가능한 아이디입니다.")
                 $("#checkId").attr('color','green');
                 $("#checkInsert").html("")
                 idChecked = true;
-            } else if(cnt == 1) { // cnt가 1일 경우 -> 이미 존재하는 아이디
+            } 
+			else if(cnt == 1) { // cnt가 1일 경우 -> 이미 존재하는 아이디
             	$("#checkId").html("이미 사용중인 아이디입니다.")
                 $("#checkId").attr('color','red');
             	$("#checkInsert").html("")
                 idChecked = false;                
-			} else if(userId == ""){
+			} 
+			else if(userId == "") {
 				idChecked = false;
 			}
 		},
@@ -124,36 +122,36 @@ function checkPw1(pw){
 	var reg2 = /(.)\1{3,}/i; // 같은 문자 4개 이상
 	var reg3 = ["1234567890", "qwertyuiop", "asdfghjkl", "zxcvbnm"];
 	var reg3Chk = false;
+	
 	for(let i = 0 ; i < pw.length-2 ; i++){
 	  const sliceValue = pw.substring(i,i+3);
-	  
 	  if(reg3.some((code) => code.includes(sliceValue))){
 	    reg3Chk = true;
 	  }
 	}
 
-	/* var hangulcheck = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/; */
-	if(id =="" || idChecked === false){
+	
+	if(id =="" || idChecked === false) {
 		$("#checkId").html("아이디 입력 및 중복 확인 해주세요");
 		$("#checkId").attr('color','red');
 		$("#userId").focus();
 	}
-	else if(false === reg1.test(pw) ){
+	else if(false === reg1.test(pw) ) {
 		$("#checkPw1").html("9~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
 		$("#checkPw1").attr('color','red');
 		pwChecked1 = false;
 	}
-	else if(reg2.test(pw)){
+	else if(reg2.test(pw.toLowerCase())) {
 		$("#checkPw1").html("동일한 문자는 4번 이상 연속적으로 사용할 수 없습니다.")
 		$("#checkPw1").attr('color','red');
 		pwChecked1 = false;
 	}
-	else if(pw.search(id) > -1){
+	else if(pw.search(id) > -1) {
 		$("#checkPw1").html("아이디가 포함된 비밀번호는 사용할 수 없습니다.")
 		$("#checkPw1").attr('color','red');
 		pwChecked1 = false;
 	}
-	else if(reg3Chk){
+	else if(reg3Chk) {
 		$("#checkPw1").html("키보드의 연속된 배열은 나열할 수 없습니다.")
 		$("#checkPw1").attr('color','red');
 		pwChecked1 = false;

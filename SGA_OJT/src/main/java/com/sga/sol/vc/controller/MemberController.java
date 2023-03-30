@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sga.sol.vc.service.MemberService;
+import com.sga.sol.vc.util.TypeDecryptUtil;
 import com.sga.sol.vc.vo.MemberVo;
 
 @Controller
@@ -42,6 +43,8 @@ public class MemberController {
 
 		// return 객체 생성
 		HashMap<String, String> result = new HashMap<String, String>();
+		
+		// 로그인 결과 출력
 		String Code = memberservice.loginUser(vo);
 
 		result.put("Code", Code);
@@ -82,7 +85,7 @@ public class MemberController {
 	@PostMapping(value = "/insertMember")
 	public String insertMember(MemberVo vo, Model model, HttpServletRequest request) throws Exception {
 		// encryUser로 user 정보 암호화 후 MemberVo타입으로 리턴
-		memberservice.insertMember2(memberservice.encryptUser(vo));
+		memberservice.insertMember2(vo);
 		return "redirect:/list";
 	}
 
@@ -124,6 +127,18 @@ public class MemberController {
 		System.out.println(vo.getUserId());
 		memberservice.deleteUser(vo);
 		return "redirect:/updateMember";
+	}
+	
+	//가상키보드테스트
+	@RequestMapping("/keyboardTest")
+	public String keyboardTest() {
+		return "member/virtualKeyBoardTest";
+	}
+	
+	//가상키보드테스트
+	@RequestMapping("/keyboardTest2")
+	public String keyboardTest2() {
+		return "member/virtualKeyBoardTest2";
 	}
 
 }

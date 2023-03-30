@@ -17,5 +17,6 @@
 		<typeAlias alias="map" type="java.util.Map" />
 		<typeAlias alias="list" type="java.util.List" />
 		<typeAlias alias="membervo" type="com.sga.sol.vc.vo.MemberVo" />
+		<typeAlias alias="resultMap" type="com.sga.sol.vc.util.ResultMap" />
     </typeAliases>
 </configuration>

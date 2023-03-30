@@ -46,4 +46,6 @@ public interface MemberMapper {
 	//사용자 삭제
 	void deleteUser(MemberVo vo) throws Exception;
 	
+	//스프링 시큐리티 연습
+	Map<String, Object> selectLogin(String loginId) throws Exception;
 }

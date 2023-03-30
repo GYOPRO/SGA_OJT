@@ -5,10 +5,13 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.Mapping;
 
 import com.sga.sol.vc.mapper.MemberMapper;
 import com.sga.sol.vc.service.MemberService;
+import com.sga.sol.vc.util.DiskUtil;
 import com.sga.sol.vc.util.ECBPasswordUtil;
+import com.sga.sol.vc.util.TypeDecryptUtil;
 import com.sga.sol.vc.util.sha3;
 import com.sga.sol.vc.vo.MemberVo;
 
@@ -74,6 +77,7 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public void insertMember2(MemberVo vo) throws Exception {
+		vo = encryptUser(vo);
 		membermapper.insertMember2(vo);
 	}
 
@@ -83,22 +87,24 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	/*
-	 * 회원가입 시 사용자 패스워드 암호화 salt(32) + inputPassword = dek(32) dek(32) + key(32) =
-	 * kek(64)
+	 * 회원가입 시 사용자 패스워드 암호화 salt + inputPassword = dek / dek + key = kek
+	 * 
 	 */
 	@Override
 	public MemberVo encryptUser(MemberVo vo) throws Exception {
 		//sha3 해시함수 객체 생성
 		sha3 sha3 = new sha3();
 		
+		//seed로 salt 생성
 		byte[] salt = sha3.generateSalt();
 		String inputPassword = vo.getUserPassword();
-
+		//입력된 패스워드 + salt 로 hashedpassword 생성
 		byte[] hashedPassword = sha3.generateHash(inputPassword, salt);
 		
-		byte[] key = ECBPasswordUtil.getEcbKey(16);
+		//disk시리얼 번호 조합한 16바이트 key
+		byte[] key = DiskUtil.getserialEcbKey();
+		//hasedpassword + key 로 ecb암호화
 		byte[] kek = ECBPasswordUtil.encrypt(hashedPassword, key);
-
 
 		vo.setUserPassword(inputPassword);
 		vo.setSalt(ECBPasswordUtil.bytesToHex(salt));
@@ -115,7 +121,12 @@ public class MemberServiceImpl implements MemberService {
 		// 입력 아이디
 		String inputId = vo.getUserId();
 		// 입력 패스워드
-		String inputPassword = vo.getUserPassword();
+		String mappedPassword = vo.getUserPassword();
+		// 입력 패스워드 키보드 맵핑 복호화
+		TypeDecryptUtil typeDecryt = new TypeDecryptUtil();
+		
+		String inputPassword = typeDecryt.boardDecry(mappedPassword);
+		
 
 		sha3 sha3 = new sha3();
 
@@ -162,6 +173,34 @@ public class MemberServiceImpl implements MemberService {
 		return Code;
 	}
 
+	//복호화 패스워드와 입력 패스워드 해시화와 일치하는지
+	public boolean matchPassword(MemberVo vo) throws Exception{
+		boolean result = false;
+		// 입력 아이디
+		String inputId = vo.getUserId();
+		// 입력 패스워드
+		String inputPassword = vo.getUserPassword();
+		sha3 sha3 = new sha3();
+		String Code = "";
+		// 아이디 존재하는지
+		int idChk = checkId(inputId);
+		// db저장 패스워드 정보 불러오기
+		MemberVo dbVo = loginChk2(vo);
+
+		// db정보 salt + inputPassword
+		String salt = dbVo.getSalt();
+		byte[] inputPasswordHash = sha3.generateHash(inputPassword, ECBPasswordUtil.hexToBytes(salt));
+		// db저장 kek => 복호화
+		byte[] decry = ECBPasswordUtil.decrypt(ECBPasswordUtil.hexToBytes(dbVo.getKek()),
+		ECBPasswordUtil.hexToBytes(dbVo.getKey()));
+		String decryS = ECBPasswordUtil.bytesToHex(decry);
+		String hashedPassword = ECBPasswordUtil.bytesToHex(inputPasswordHash);
+
+		result = decryS.equals(hashedPassword);
+		return result;
+	}
+	
+			
 	//사용자 삭제
 	public void deleteUser(MemberVo vo) throws Exception{
 		membermapper.deleteUser(vo);

@@ -337,7 +337,6 @@ public class sha3 {
 
     	//saltSeed 값을 이용해 output값 초기화
     	sha3_hash(output, len, msg, msg.length , 256 , 0);
-    	 print_hex("sha3-256", output, len);
     	 
     	for(int i = 0 ; i < SALT_ITERATIONS ; i++) {
     		sha3_hash(output,len,output,output.length,256,0);
@@ -376,7 +375,6 @@ public class sha3 {
     {
         int i = 0;
 
-        System.out.printf("%s :", valName);
         for (i = 0; i < dataLen; i++)
         {
             if ((i & 0x0F) == 0)
@@ -390,3 +388,4 @@ public class sha3 {
 
 	
 }
+

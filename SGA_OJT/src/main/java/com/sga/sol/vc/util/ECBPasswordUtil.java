@@ -4,9 +4,6 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-
 
 
 public class ECBPasswordUtil {
@@ -102,6 +99,7 @@ public class ECBPasswordUtil {
             random.nextBytes(byteArray);
             return byteArray;
         };
+        
         return randomByteArraySupplier.get();
     }
 

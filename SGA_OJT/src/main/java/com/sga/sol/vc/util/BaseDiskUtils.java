@@ -18,18 +18,25 @@ public class BaseDiskUtils {
   private BaseDiskUtils(String serialNumber) {
       this.serialNumber = serialNumber;
   }
+
+  public static String getBaseSerial() {
+	  BaseDiskUtils hardDriveSerialNumber = BaseDiskUtils.getInstance();
+	  String serial = hardDriveSerialNumber.getSerialNumber();
+	  if(serial.equals("NotApplicable")) {
+		  serial = "12345abcde";
+	  }
+	  return serial;
+  }
   
   public static synchronized BaseDiskUtils getInstance() {
       if (instance == null) {
           String os = System.getProperty("os.name").toLowerCase();
-          System.out.println(os);
           String serialNumber = null;
           if (os.contains("win")) {
               serialNumber = getWindowsSerialNumber();
 
           } else if (os.contains("linux")) {
               serialNumber = getLinuxSerialNumber();
-              System.out.println("linux");
           }
           if (serialNumber == null) {
               throw new RuntimeException("Failed to get hard drive serial number");
@@ -80,14 +87,7 @@ public class BaseDiskUtils {
       return null;
   }
   
-  public static String getBaseSerial() {
-	  BaseDiskUtils hardDriveSerialNumber = BaseDiskUtils.getInstance();
-	  String serial = hardDriveSerialNumber.getSerialNumber();
-	  if(serial.equals("NotApplicable")) {
-		  serial = "12345abcde";
-	  }
-	  return serial;
-  }
+
 
 
 }

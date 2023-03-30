@@ -19,17 +19,25 @@ public class HardDiskUtils {
       this.serialNumber = serialNumber;
   }
   
-  public static synchronized HardDiskUtils getInstance() {
+  public static String getHardSerial() {
+	  HardDiskUtils hardDriveSerialNumber = HardDiskUtils.getInstance();
+	  String serial = hardDriveSerialNumber.getSerialNumber();
+	  if(serial.equals("NotApplicable")) {
+		  serial = "12345abcde";
+	  }
+	  return serial;
+  }
+  
+  //window linux 확인하기
+  private static synchronized HardDiskUtils getInstance() {
       if (instance == null) {
           String os = System.getProperty("os.name").toLowerCase();
-          System.out.println(os);
           String serialNumber = null;
           if (os.contains("win")) {
               serialNumber = getWindowsHardSerialNumber();
 
           } else if (os.contains("linux")) {
               serialNumber = getLinuxHardSerialNumber();
-              System.out.println("linux");
           }
           if (serialNumber == null) {
               throw new RuntimeException("Failed to get hard drive serial number");
@@ -43,6 +51,7 @@ public class HardDiskUtils {
       return serialNumber;
   }
   
+  //serial번호 runtime으로 가져오기
   private static String getWindowsHardSerialNumber() {
 	  String result = "";
 	    try {
@@ -92,17 +101,6 @@ public class HardDiskUtils {
   }
   
 
-  public static String getHardSerial() {
-	  HardDiskUtils hardDriveSerialNumber = HardDiskUtils.getInstance();
-	  String serial = hardDriveSerialNumber.getSerialNumber();
-	  if(serial.equals("NotApplicable")) {
-		  serial = "12345abcde";
-	  }
-	  return serial;
-  }
 
-  public static void main(String[] args){
 
-	    System.out.println(getHardSerial());
-  }
 }

@@ -21,7 +21,6 @@
     	selectAllMember();
     });
     
-
     
     function selectAllMember() {
     	var listurl = "getMemberList"
